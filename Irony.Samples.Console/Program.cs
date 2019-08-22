@@ -6,7 +6,6 @@ namespace Irony.Samples.ConsoleCalculator
 {
   class Program
   {
-
     static void Main(string[] args)
     {
       Console.Title = "Irony Console Sample";
@@ -19,6 +18,7 @@ namespace Irony.Samples.ConsoleCalculator
       Console.WriteLine("");
       Console.Write("?");
       var choice = Console.ReadLine();
+
       Grammar grammar;
       switch (choice)
       {
@@ -35,10 +35,12 @@ namespace Irony.Samples.ConsoleCalculator
       }
 
       Console.Clear();
+
       var language = new LanguageData(grammar);
       var runtime = new LanguageRuntime(language);
       var commandLine = new CommandLine(runtime);
+
       commandLine.Run();
     }
-  }//class
+  }
 }
