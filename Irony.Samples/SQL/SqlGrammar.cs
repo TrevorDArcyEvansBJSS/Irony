@@ -262,7 +262,6 @@ namespace Irony.Samples.SQL
       // in conflict resolution when binOp node is sitting on the stack
       base.MarkTransient(stmt, term, asOpt, aliasOpt, stmtLine, expression, unOp, tuple);
       binOp.SetFlag(TermFlags.InheritPrecedence);
-
-    }//constructor
-  }//class
-}//namespace
+    }
+  }
+}
