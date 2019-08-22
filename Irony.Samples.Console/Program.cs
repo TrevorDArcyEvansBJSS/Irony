@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
+﻿using Irony.Interpreter;
 using Irony.Parsing;
-using Irony.Interpreter;
-using Irony.Samples;
+using System;
 
-namespace Irony.Samples.ConsoleCalculator {
-  class Program {
+namespace Irony.Samples.ConsoleCalculator
+{
+  class Program
+  {
 
-    static void Main(string[] args) {
+    static void Main(string[] args)
+    {
       Console.Title = "Irony Console Sample";
       Console.WriteLine("Irony Console Sample.");
       Console.WriteLine("");
@@ -21,23 +19,26 @@ namespace Irony.Samples.ConsoleCalculator {
       Console.WriteLine("");
       Console.Write("?");
       var choice = Console.ReadLine();
-      Grammar grammar; 
-      switch (choice) {
-        case "1": 
+      Grammar grammar;
+      switch (choice)
+      {
+        case "1":
           grammar = new SampleExpressionEvaluatorGrammar();
           break;
+
         case "2":
           grammar = new MiniPython.MiniPythonGrammar();
-          break; 
+          break;
+
         default:
           return;
       }
+
       Console.Clear();
       var language = new LanguageData(grammar);
       var runtime = new LanguageRuntime(language);
       var commandLine = new CommandLine(runtime);
       commandLine.Run();
     }
-
   }//class
 }

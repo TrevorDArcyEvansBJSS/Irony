@@ -10,29 +10,30 @@
  * **********************************************************************************/
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Diagnostics;
 
-namespace Irony.Parsing.Construction {
-  internal class LanguageDataBuilder { 
+namespace Irony.Parsing.Construction
+{
+  internal class LanguageDataBuilder
+  {
 
     internal LanguageData Language;
     Grammar _grammar;
 
-    public LanguageDataBuilder(LanguageData language) {
+    public LanguageDataBuilder(LanguageData language)
+    {
       Language = language;
       _grammar = Language.Grammar;
     }
 
-    public bool Build() {
-      var sw = new Stopwatch(); 
-      try {
+    public bool Build()
+    {
+      var sw = new Stopwatch();
+      try
+      {
         if (_grammar.Root == null)
           Language.Errors.AddAndThrow(GrammarErrorLevel.Error, null, Resources.ErrRootNotSet);
-        sw.Start(); 
+        sw.Start();
         var gbld = new GrammarDataBuilder(Language);
         gbld.Build();
         //Just in case grammar author wants to customize something...
@@ -45,22 +46,27 @@ namespace Irony.Parsing.Construction {
         //call grammar method, a chance to tweak the automaton
         _grammar.OnLanguageDataConstructed(Language);
         return true;
-      } catch (GrammarErrorException) {
+      }
+      catch (GrammarErrorException)
+      {
         return false; //grammar error should be already added to Language.Errors collection
-      } finally {
+      }
+      finally
+      {
         Language.ErrorLevel = Language.Errors.GetMaxLevel();
-        sw.Stop(); 
-        Language.ConstructionTime = sw.ElapsedMilliseconds; 
+        sw.Stop();
+        Language.ConstructionTime = sw.ElapsedMilliseconds;
       }
 
     }
 
     #region Language Data Validation
-    private void Validate() {
+    private void Validate()
+    {
 
     }//method
     #endregion
 
-  
+
   }//class
 }
