@@ -52,6 +52,10 @@ namespace Irony.Samples.SQL
       var COUNT = ToTerm("COUNT");
       var JOIN = ToTerm("JOIN");
       var BY = ToTerm("BY");
+      var FOREIGN = ToTerm("FOREIGN");
+      var REFERENCES = ToTerm("REFERENCES");
+      var CASCADE = ToTerm("CASCADE");
+      var NO_ACTION = ToTerm("NO") + ToTerm("ACTION");
       #endregion
 
       #region Non-terminals
@@ -75,6 +79,8 @@ namespace Irony.Samples.SQL
       var constraintDef = new NonTerminal("constraintDef");
       var constraintListOpt = new NonTerminal("constraintListOpt");
       var constraintTypeOpt = new NonTerminal("constraintTypeOpt");
+      var foreignKeyDef = new NonTerminal("foreignKeyDef");
+      var foreignKeyOpts = new NonTerminal("foreignKeyOpts");
       var idlist = new NonTerminal("idlist");
       var idlistPar = new NonTerminal("idlistPar");
       var uniqueOpt = new NonTerminal("uniqueOpt");
@@ -177,13 +183,15 @@ namespace Irony.Samples.SQL
         "(" + (number | "MAX") + ")" |
         "(" + number + comma + number + ")" |
         Empty;
+      foreignKeyOpts.Rule = Empty |(ON + DELETE + (CASCADE | NO_ACTION));
+      foreignKeyDef.Rule = FOREIGN + KEY + idlistPar + REFERENCES + Id + idlistPar + foreignKeyOpts;
       constraintDef.Rule = CONSTRAINT + Id + constraintTypeOpt;
       constraintListOpt.Rule = MakeStarRule(constraintListOpt, constraintDef);
       constraintTypeOpt.Rule =
         PRIMARY + KEY + idlistPar |
         UNIQUE + idlistPar |
         NOT + NULL + idlistPar |
-        "Foreign" + KEY + idlistPar + "References" + Id + idlistPar;
+        foreignKeyDef;
       idlistPar.Rule = "(" + idlist + ")";
       idlist.Rule = MakePlusRule(idlist, comma, Id);
       #endregion
