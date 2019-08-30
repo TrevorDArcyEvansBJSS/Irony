@@ -258,7 +258,7 @@ namespace Irony.Samples.SQL
       aggregateName.Rule = COUNT | "Avg" | "Min" | "Max" | "StDev" | "StDevP" | "Sum" | "Var" | "VarP";
       intoClauseOpt.Rule = Empty | INTO + Id;
       fromClauseOpt.Rule = Empty | FROM + idlist + joinChainList;
-      joinChainOpt.Rule = joinKindOpt + JOIN + idlist + ON + Id + "=" + Id;
+      joinChainOpt.Rule = joinKindOpt + JOIN + idlist + (Empty | Id) + ON + Id + "=" + Id;
       joinKindOpt.Rule = Empty | "INNER" | "LEFT" | "RIGHT";
       joinChainList.Rule = MakeStarRule(joinChainList, joinChainOpt);
       whereClauseOpt.Rule = Empty | "WHERE" + expression;
