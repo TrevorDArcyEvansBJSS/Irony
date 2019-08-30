@@ -135,6 +135,7 @@ namespace Irony.Samples.SQL
       var stmtList = new NonTerminal("stmtList");
       var funArgs = new NonTerminal("funArgs");
       var inStmt = new NonTerminal("inStmt");
+      var isStmt = new NonTerminal("isStmt");
       #endregion
 
       #region BNF Rules
@@ -270,7 +271,7 @@ namespace Irony.Samples.SQL
       #region Expression
       exprList.Rule = MakePlusRule(exprList, comma, expression);
       expression.Rule = term | unExpr | binExpr;// | betweenExpr; //-- BETWEEN doesn't work - yet; brings a few parsing conflicts 
-      term.Rule = Id | string_literal | number | funCall | tuple | parSelectStmt;// | inStmt;
+      term.Rule = Id | string_literal | number | funCall | tuple | parSelectStmt | isStmt | inStmt;
       tuple.Rule = "(" + exprList + ")";
       parSelectStmt.Rule = "(" + selectStmt + ")";
       unExpr.Rule = unOp + term;
@@ -286,6 +287,7 @@ namespace Irony.Samples.SQL
       funCall.Rule = Id + "(" + funArgs + ")";
       funArgs.Rule = selectStmt | exprList;
       inStmt.Rule = expression + "IN" + "(" + exprList + ")";
+      isStmt.Rule = expression + "IS" + notOpt + NULL;
       #endregion
 
       #region Operators
