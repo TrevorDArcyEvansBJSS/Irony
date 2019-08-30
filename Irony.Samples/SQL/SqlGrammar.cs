@@ -143,7 +143,7 @@ namespace Irony.Samples.SQL
       #region Create table
       createTableStmt.Rule = CREATE + TABLE + Id + "(" + fieldDefList + ")";
       fieldDefList.Rule = MakePlusRule(fieldDefList, comma, fieldDef);
-      fieldDef.Rule = (Id + typeName + typeParamsOpt + nullSpecOpt) | constraintTypeOpt;
+      fieldDef.Rule = (Id + typeName + typeParamsOpt + nullSpecOpt) | constraintTypeOpt | constraintDef;
       nullSpecOpt.Rule =
         NULL |
         NOT + NULL |
@@ -173,7 +173,10 @@ namespace Irony.Samples.SQL
         "IMAGE" |
         "TEXT" |
         "NTEXT";
-      typeParamsOpt.Rule = "(" + (number | "MAX") + ")" | "(" + number + comma + number + ")" | Empty;
+      typeParamsOpt.Rule =
+        "(" + (number | "MAX") + ")" |
+        "(" + number + comma + number + ")" |
+        Empty;
       constraintDef.Rule = CONSTRAINT + Id + constraintTypeOpt;
       constraintListOpt.Rule = MakeStarRule(constraintListOpt, constraintDef);
       constraintTypeOpt.Rule =
