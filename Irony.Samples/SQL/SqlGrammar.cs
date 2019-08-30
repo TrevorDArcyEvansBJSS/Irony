@@ -58,6 +58,8 @@ namespace Irony.Samples.SQL
       var NO_ACTION = ToTerm("NO") + ToTerm("ACTION");
       var ACTION = CASCADE | NO_ACTION;
       ACTION.Name = "action";
+      var IF_EXISTS = ToTerm("IF") + ToTerm("EXISTS");
+      var OPT_IF_EXISTS = Empty | IF_EXISTS;
       #endregion
 
       #region Non-terminals
@@ -209,15 +211,16 @@ namespace Irony.Samples.SQL
 
       #region Alter
       alterStmt.Rule = ALTER + TABLE + Id + alterCmd;
-      alterCmd.Rule = ADD + COLUMN + fieldDefList + constraintListOpt
-                    | ADD + constraintDef
-                    | DROP + COLUMN + Id
-                    | DROP + CONSTRAINT + Id;
+      alterCmd.Rule =
+        ADD + COLUMN + fieldDefList + constraintListOpt |
+        ADD + constraintDef | 
+        DROP + COLUMN + OPT_IF_EXISTS + Id | 
+        DROP + CONSTRAINT + OPT_IF_EXISTS + Id;
       #endregion
 
       #region Drop
-      dropTableStmt.Rule = DROP + TABLE + (Empty | (ToTerm("IF") + ToTerm("EXISTS"))) + Id;
-      dropIndexStmt.Rule = DROP + INDEX + Id + ON + Id;
+      dropTableStmt.Rule = DROP + TABLE + OPT_IF_EXISTS + Id;
+      dropIndexStmt.Rule = DROP + INDEX + OPT_IF_EXISTS + Id + ON + Id;
       #endregion
 
       #region Insert
