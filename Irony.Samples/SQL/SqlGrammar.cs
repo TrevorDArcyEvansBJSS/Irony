@@ -56,6 +56,7 @@ namespace Irony.Samples.SQL
       var REFERENCES = ToTerm("REFERENCES");
       var CASCADE = ToTerm("CASCADE");
       var NO_ACTION = ToTerm("NO") + ToTerm("ACTION");
+      var ACTION = CASCADE | NO_ACTION;
       #endregion
 
       #region Non-terminals
@@ -183,7 +184,7 @@ namespace Irony.Samples.SQL
         "(" + (number | "MAX") + ")" |
         "(" + number + comma + number + ")" |
         Empty;
-      foreignKeyOpts.Rule = Empty |(ON + DELETE + (CASCADE | NO_ACTION));
+      foreignKeyOpts.Rule = Empty | (ON + DELETE + ACTION);
       foreignKeyDef.Rule = FOREIGN + KEY + idlistPar + REFERENCES + Id + idlistPar + foreignKeyOpts;
       constraintDef.Rule = CONSTRAINT + Id + constraintTypeOpt;
       constraintListOpt.Rule = MakeStarRule(constraintListOpt, constraintDef);
