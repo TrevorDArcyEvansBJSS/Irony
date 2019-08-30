@@ -150,7 +150,7 @@ namespace Irony.Samples.SQL
                                    // MS SQL types:  
                                    | "DATETIME" | "INT" | "DOUBLE" | "CHAR" | "NCHAR" | "VARCHAR" | "NVARCHAR"
                                    | "IMAGE" | "TEXT" | "NTEXT";
-      typeParamsOpt.Rule = "(" + number + ")" | "(" + number + comma + number + ")" | Empty;
+      typeParamsOpt.Rule = "(" + (number | "MAX") + ")" | "(" + number + comma + number + ")" | Empty;
       constraintDef.Rule = CONSTRAINT + Id + constraintTypeOpt;
       constraintListOpt.Rule = MakeStarRule(constraintListOpt, constraintDef);
       constraintTypeOpt.Rule = PRIMARY + KEY + idlistPar | UNIQUE + idlistPar | NOT + NULL + idlistPar
