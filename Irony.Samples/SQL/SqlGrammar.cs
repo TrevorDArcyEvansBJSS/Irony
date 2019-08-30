@@ -182,7 +182,8 @@ namespace Irony.Samples.SQL
         "NVARCHAR" |
         "IMAGE" |
         "TEXT" |
-        "NTEXT";
+        "NTEXT" |
+        "DATETIME2";
       typeParamsOpt.Rule =
         "(" + (number | "MAX") + ")" |
         "(" + number + comma + number + ")" |
