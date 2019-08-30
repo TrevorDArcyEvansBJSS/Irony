@@ -117,6 +117,7 @@ namespace Irony.Samples.SQL
       var aggregateArg = new NonTerminal("aggregateArg");
       var aggregateName = new NonTerminal("aggregateName");
       var tuple = new NonTerminal("tuple");
+      var joinChainList = new NonTerminal("joinChainList");
       var joinChainOpt = new NonTerminal("joinChainOpt");
       var joinKindOpt = new NonTerminal("joinKindOpt");
       var term = new NonTerminal("term");
@@ -199,7 +200,7 @@ namespace Irony.Samples.SQL
         UNIQUE + idlistPar |
         NOT + NULL + idlistPar |
         foreignKeyDef;
-      idlistPar.Rule = "(" + idlist + ")";
+      idlistPar.Rule = "(" + idlist + (Empty | "ASC" | "DESC") + ")";
       idlist.Rule = MakePlusRule(idlist, comma, Id);
       #endregion
 
@@ -256,9 +257,10 @@ namespace Irony.Samples.SQL
       aggregateArg.Rule = expression | "*";
       aggregateName.Rule = COUNT | "Avg" | "Min" | "Max" | "StDev" | "StDevP" | "Sum" | "Var" | "VarP";
       intoClauseOpt.Rule = Empty | INTO + Id;
-      fromClauseOpt.Rule = Empty | FROM + idlist + joinChainOpt;
-      joinChainOpt.Rule = Empty | joinKindOpt + JOIN + idlist + ON + Id + "=" + Id;
+      fromClauseOpt.Rule = Empty | FROM + idlist + joinChainList;
+      joinChainOpt.Rule = joinKindOpt + JOIN + idlist + ON + Id + "=" + Id;
       joinKindOpt.Rule = Empty | "INNER" | "LEFT" | "RIGHT";
+      joinChainList.Rule = MakeStarRule(joinChainList, joinChainOpt);
       whereClauseOpt.Rule = Empty | "WHERE" + expression;
       groupClauseOpt.Rule = Empty | "GROUP" + BY + idlist;
       havingClauseOpt.Rule = Empty | "HAVING" + expression;
