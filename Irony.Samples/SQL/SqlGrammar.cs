@@ -12,57 +12,6 @@ namespace Irony.Samples.SQL
     {
       //SQL is case insensitive
 
-      #region Terminals
-      var comment = new CommentTerminal("comment", "/*", "*/");
-      var lineComment = new CommentTerminal("line_comment", "--", "\n", "\r\n");
-      NonGrammarTerminals.Add(comment);
-      NonGrammarTerminals.Add(lineComment);
-
-      var number = new NumberLiteral("number");
-      var string_literal = new StringLiteral("string", "'", StringOptions.AllowsDoubledQuote);
-      var Id_simple = TerminalFactory.CreateSqlExtIdentifier(this, "id_simple"); //covers normal identifiers (abc) and quoted id's ([abc d], "abc d")
-
-      var comma = ToTerm(",");
-      var dot = ToTerm(".");
-
-      var CREATE = ToTerm("CREATE");
-      var NULL = ToTerm("NULL");
-      var NOT = ToTerm("NOT");
-      var UNIQUE = ToTerm("UNIQUE");
-      var WITH = ToTerm("WITH");
-      var TABLE = ToTerm("TABLE");
-      var ALTER = ToTerm("ALTER");
-      var ADD = ToTerm("ADD");
-      var COLUMN = ToTerm("COLUMN");
-      var DROP = ToTerm("DROP");
-      var CONSTRAINT = ToTerm("CONSTRAINT");
-      var INDEX = ToTerm("INDEX");
-      var ON = ToTerm("ON");
-      var KEY = ToTerm("KEY");
-      var PRIMARY = ToTerm("PRIMARY");
-      var INSERT = ToTerm("INSERT");
-      var INTO = ToTerm("INTO");
-      var UPDATE = ToTerm("UPDATE");
-      var SET = ToTerm("SET");
-      var VALUES = ToTerm("VALUES");
-      var DELETE = ToTerm("DELETE");
-      var SELECT = ToTerm("SELECT");
-      var FROM = ToTerm("FROM");
-      var AS = ToTerm("AS");
-      var COUNT = ToTerm("COUNT");
-      var JOIN = ToTerm("JOIN");
-      var BY = ToTerm("BY");
-      var FOREIGN = ToTerm("FOREIGN");
-      var REFERENCES = ToTerm("REFERENCES");
-      var CASCADE = ToTerm("CASCADE");
-      var NO_ACTION = ToTerm("NO") + ToTerm("ACTION");
-      var ACTION = CASCADE | NO_ACTION;
-      ACTION.Name = "action";
-      var IF_EXISTS = ToTerm("IF") + ToTerm("EXISTS");
-      var OPT_IF_EXISTS = Empty | IF_EXISTS;
-      var DEFAULT = ToTerm("DEFAULT");
-      #endregion
-
       #region Non-terminals
       var Id = new NonTerminal("Id");
       var stmt = new NonTerminal("stmt");
@@ -136,6 +85,58 @@ namespace Irony.Samples.SQL
       var funArgs = new NonTerminal("funArgs");
       var inStmt = new NonTerminal("inStmt");
       var isStmt = new NonTerminal("isStmt");
+      #endregion
+
+      #region Terminals
+      var comment = new CommentTerminal("comment", "/*", "*/");
+      var lineComment = new CommentTerminal("line_comment", "--", "\n", "\r\n");
+      NonGrammarTerminals.Add(comment);
+      NonGrammarTerminals.Add(lineComment);
+
+      var number = new NumberLiteral("number");
+      var string_literal = new StringLiteral("string", "'", StringOptions.AllowsDoubledQuote);
+      var Id_simple = TerminalFactory.CreateSqlExtIdentifier(this, "id_simple"); //covers normal identifiers (abc) and quoted id's ([abc d], "abc d")
+
+      var comma = ToTerm(",");
+      var dot = ToTerm(".");
+
+      var CREATE = ToTerm("CREATE");
+      var NULL = ToTerm("NULL");
+      var NOT = ToTerm("NOT");
+      var UNIQUE = ToTerm("UNIQUE");
+      var WITH = ToTerm("WITH");
+      var TABLE = ToTerm("TABLE");
+      var ALTER = ToTerm("ALTER");
+      var ADD = ToTerm("ADD");
+      var COLUMN = ToTerm("COLUMN");
+      var DROP = ToTerm("DROP");
+      var CONSTRAINT = ToTerm("CONSTRAINT");
+      var INDEX = ToTerm("INDEX");
+      var ON = ToTerm("ON");
+      var KEY = ToTerm("KEY");
+      var PRIMARY = ToTerm("PRIMARY");
+      var INSERT = ToTerm("INSERT");
+      var INTO = ToTerm("INTO");
+      var UPDATE = ToTerm("UPDATE");
+      var SET = ToTerm("SET");
+      var VALUES = ToTerm("VALUES");
+      var DELETE = ToTerm("DELETE");
+      var SELECT = ToTerm("SELECT");
+      var FROM = ToTerm("FROM");
+      var AS = ToTerm("AS");
+      var COUNT = ToTerm("COUNT");
+      var JOIN = ToTerm("JOIN");
+      var BY = ToTerm("BY");
+      var FOREIGN = ToTerm("FOREIGN");
+      var REFERENCES = ToTerm("REFERENCES");
+      var CASCADE = ToTerm("CASCADE");
+      var NO_ACTION = ToTerm("NO") + ToTerm("ACTION");
+      var ACTION = CASCADE | NO_ACTION;
+      ACTION.Name = "action";
+      var IF_EXISTS = ToTerm("IF") + ToTerm("EXISTS");
+      var OPT_IF_EXISTS = Empty | IF_EXISTS;
+      var DEFAULT = ToTerm("DEFAULT");
+      var OPT_ALIAS = (Empty | Id);
       #endregion
 
       #region BNF Rules
@@ -218,8 +219,8 @@ namespace Irony.Samples.SQL
       alterStmt.Rule = ALTER + TABLE + Id + alterCmd;
       alterCmd.Rule =
         ADD + COLUMN + fieldDefList + constraintListOpt |
-        ADD + constraintDef | 
-        DROP + COLUMN + OPT_IF_EXISTS + Id | 
+        ADD + constraintDef |
+        DROP + COLUMN + OPT_IF_EXISTS + Id |
         DROP + CONSTRAINT + OPT_IF_EXISTS + Id;
       #endregion
 
@@ -258,8 +259,8 @@ namespace Irony.Samples.SQL
       aggregateArg.Rule = expression | "*";
       aggregateName.Rule = COUNT | "Avg" | "Min" | "Max" | "StDev" | "StDevP" | "Sum" | "Var" | "VarP";
       intoClauseOpt.Rule = Empty | INTO + Id;
-      fromClauseOpt.Rule = Empty | FROM + idlist + joinChainList;
-      joinChainOpt.Rule = joinKindOpt + JOIN + idlist + (Empty | Id) + ON + Id + "=" + Id;
+      fromClauseOpt.Rule = Empty | FROM + idlist + OPT_ALIAS + joinChainList;
+      joinChainOpt.Rule = joinKindOpt + JOIN + idlist + OPT_ALIAS + ON + Id + "=" + Id;
       joinKindOpt.Rule = Empty | "INNER" | "LEFT" | "RIGHT";
       joinChainList.Rule = MakeStarRule(joinChainList, joinChainOpt);
       whereClauseOpt.Rule = Empty | "WHERE" + expression;
