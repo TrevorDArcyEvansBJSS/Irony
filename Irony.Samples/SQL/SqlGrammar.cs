@@ -60,6 +60,7 @@ namespace Irony.Samples.SQL
       ACTION.Name = "action";
       var IF_EXISTS = ToTerm("IF") + ToTerm("EXISTS");
       var OPT_IF_EXISTS = Empty | IF_EXISTS;
+      var DEFAULT = ToTerm("DEFAULT");
       #endregion
 
       #region Non-terminals
@@ -158,7 +159,8 @@ namespace Irony.Samples.SQL
         NULL |
         NOT + NULL |
         NOT + NULL + UNIQUE |
-        NOT + NULL + ToTerm("DEFAULT") + Id |
+        NOT + NULL + DEFAULT + (Id | number) |
+        DEFAULT + (Id | number) |
         Empty;
       typeName.Rule =
         ToTerm("BIT") |
