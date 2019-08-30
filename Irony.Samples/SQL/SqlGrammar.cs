@@ -144,7 +144,7 @@ namespace Irony.Samples.SQL
       createTableStmt.Rule = CREATE + TABLE + Id + "(" + fieldDefList + ")";
       fieldDefList.Rule = MakePlusRule(fieldDefList, comma, fieldDef);
       fieldDef.Rule = (Id + typeName + typeParamsOpt + nullSpecOpt) | constraintTypeOpt;
-      nullSpecOpt.Rule = NULL | NOT + NULL | NOT + NULL + UNIQUE | Empty;
+      nullSpecOpt.Rule = NULL | NOT + NULL | NOT + NULL + UNIQUE | NOT + NULL + ToTerm("DEFAULT") + Id | Empty;
       typeName.Rule = ToTerm("BIT") | "DATE" | "TIME" | "TIMESTAMP" | "DECIMAL" | "REAL" | "FLOAT" | "SMALLINT" | "INTEGER"
                                    | "INTERVAL" | "CHARACTER"
                                    // MS SQL types:  
