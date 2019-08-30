@@ -57,6 +57,7 @@ namespace Irony.Samples.SQL
       var CASCADE = ToTerm("CASCADE");
       var NO_ACTION = ToTerm("NO") + ToTerm("ACTION");
       var ACTION = CASCADE | NO_ACTION;
+      ACTION.Name = "action";
       #endregion
 
       #region Non-terminals
