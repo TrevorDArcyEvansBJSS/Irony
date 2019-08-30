@@ -216,7 +216,7 @@ namespace Irony.Samples.SQL
       #endregion
 
       #region Drop
-      dropTableStmt.Rule = DROP + TABLE + Id;
+      dropTableStmt.Rule = DROP + TABLE + (Empty | (ToTerm("IF") + ToTerm("EXISTS"))) + Id;
       dropIndexStmt.Rule = DROP + INDEX + Id + ON + Id;
       #endregion
 
