@@ -144,17 +144,43 @@ namespace Irony.Samples.SQL
       createTableStmt.Rule = CREATE + TABLE + Id + "(" + fieldDefList + ")";
       fieldDefList.Rule = MakePlusRule(fieldDefList, comma, fieldDef);
       fieldDef.Rule = (Id + typeName + typeParamsOpt + nullSpecOpt) | constraintTypeOpt;
-      nullSpecOpt.Rule = NULL | NOT + NULL | NOT + NULL + UNIQUE | NOT + NULL + ToTerm("DEFAULT") + Id | Empty;
-      typeName.Rule = ToTerm("BIT") | "DATE" | "TIME" | "TIMESTAMP" | "DECIMAL" | "REAL" | "FLOAT" | "SMALLINT" | "INTEGER"
-                                   | "INTERVAL" | "CHARACTER"
-                                   // MS SQL types:  
-                                   | "DATETIME" | "INT" | "DOUBLE" | "CHAR" | "NCHAR" | "VARCHAR" | "NVARCHAR"
-                                   | "IMAGE" | "TEXT" | "NTEXT";
+      nullSpecOpt.Rule =
+        NULL |
+        NOT + NULL |
+        NOT + NULL + UNIQUE |
+        NOT + NULL + ToTerm("DEFAULT") + Id |
+        Empty;
+      typeName.Rule =
+        ToTerm("BIT") |
+        "DATE" |
+        "TIME" |
+        "TIMESTAMP" |
+        "DECIMAL" |
+        "REAL" |
+        "FLOAT" |
+        "SMALLINT" |
+        "INTEGER" |
+        "INTERVAL" |
+        "CHARACTER" |
+        // MS SQL types:  
+        "DATETIME" |
+        "INT" |
+        "DOUBLE" |
+        "CHAR" |
+        "NCHAR" |
+        "VARCHAR" |
+        "NVARCHAR" |
+        "IMAGE" |
+        "TEXT" |
+        "NTEXT";
       typeParamsOpt.Rule = "(" + (number | "MAX") + ")" | "(" + number + comma + number + ")" | Empty;
       constraintDef.Rule = CONSTRAINT + Id + constraintTypeOpt;
       constraintListOpt.Rule = MakeStarRule(constraintListOpt, constraintDef);
-      constraintTypeOpt.Rule = PRIMARY + KEY + idlistPar | UNIQUE + idlistPar | NOT + NULL + idlistPar
-                             | "Foreign" + KEY + idlistPar + "References" + Id + idlistPar;
+      constraintTypeOpt.Rule =
+        PRIMARY + KEY + idlistPar |
+        UNIQUE + idlistPar |
+        NOT + NULL + idlistPar |
+        "Foreign" + KEY + idlistPar + "References" + Id + idlistPar;
       idlistPar.Rule = "(" + idlist + ")";
       idlist.Rule = MakePlusRule(idlist, comma, Id);
       #endregion
