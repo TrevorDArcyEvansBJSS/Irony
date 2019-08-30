@@ -141,9 +141,9 @@ namespace Irony.Samples.SQL
                 | "GO";
 
       #region Create table
-      createTableStmt.Rule = CREATE + TABLE + Id + "(" + fieldDefList + ")" + constraintListOpt;
+      createTableStmt.Rule = CREATE + TABLE + Id + "(" + fieldDefList + ")";
       fieldDefList.Rule = MakePlusRule(fieldDefList, comma, fieldDef);
-      fieldDef.Rule = Id + typeName + typeParamsOpt + nullSpecOpt;
+      fieldDef.Rule = (Id + typeName + typeParamsOpt + nullSpecOpt) | constraintTypeOpt;
       nullSpecOpt.Rule = NULL | NOT + NULL | Empty;
       typeName.Rule = ToTerm("BIT") | "DATE" | "TIME" | "TIMESTAMP" | "DECIMAL" | "REAL" | "FLOAT" | "SMALLINT" | "INTEGER"
                                    | "INTERVAL" | "CHARACTER"
